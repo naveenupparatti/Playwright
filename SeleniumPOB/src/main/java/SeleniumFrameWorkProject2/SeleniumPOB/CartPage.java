@@ -41,5 +41,9 @@ public class CartPage extends AbstractComponents {
 		return paymentPage;
 		
 	}
+	public void click()
+	{
+		System.out.println("click");
+	}
 
 }
