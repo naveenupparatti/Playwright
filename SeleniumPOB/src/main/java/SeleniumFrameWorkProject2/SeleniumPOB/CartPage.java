@@ -45,5 +45,10 @@ public class CartPage extends AbstractComponents {
 	{
 		System.out.println("click");
 	}
+	
+	public void sendKeys()
+	{
+		System.out.println("send");
+	}
 
 }
