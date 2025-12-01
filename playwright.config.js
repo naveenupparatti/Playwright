@@ -19,11 +19,11 @@ export default defineConfig({
     timeout: 40*1000
   },
   use:{
-    browserName:'chromium'
+    browserName:'firefox'
 
   },
  
-  reporter: 'html',
+  reporter: 'html'
   
 });
 
