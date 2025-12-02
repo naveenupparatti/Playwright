@@ -44,7 +44,6 @@ test('wrong login credential form validation',async ({page})=>
     // await page.pause();
     await page.locator(".customradio").nth(1).click();
     await page.locator("#okayBtn").click();
-     await page.pause();
     await expect(page.locator(".customradio").nth(1)).toBeChecked();
 
 
@@ -52,7 +51,7 @@ test('wrong login credential form validation',async ({page})=>
 });
 
 
-test.only("extracting the text from new window",async ({browser})=>
+test("extracting the text from new window",async ({browser})=>
 {
     const context=await browser.newContext();
     const page =await context.newPage();
@@ -63,4 +62,9 @@ test.only("extracting the text from new window",async ({browser})=>
      newPageLink.click()]);
     const text=await newPage.locator(".red").textContent();
     console.log(text);
+    let emailtext=text.split("@");
+    let domainName=emailtext[1].split(" ")[0];
+    await page.locator("#username").fill(domainName);
+
+
 });
