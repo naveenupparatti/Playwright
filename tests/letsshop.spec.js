@@ -17,6 +17,8 @@ test("enter the correct login credentials",async ({page})=>
     console.log(await titles.allTextContents());
 
   const productName="ZARA COAT 3";
+  const productPrice=page.locator(".card-body .text-muted").nth(0);
+  let prodprice=await productPrice.textContent();
   let  proudcts=page.locator(".card-body");
     let count=await proudcts.count();
     //   click on add to cart button
@@ -60,7 +62,7 @@ test("enter the correct login credentials",async ({page})=>
     }
   }
 
-//   verify the correct email is entered in the email fiedl
+//   verify the correct email is entered in the email field
  const emailField=page.locator(".user__name input").nth(0);
  await expect(emailField).toHaveValue(emailid);
 
@@ -74,12 +76,52 @@ let successText=await successMessage.innerText();
 successText=successText.trim();
 await expect(successMessage).toHaveText(" Thankyou for the order. ");
 
+// extract the order number from success page
 let orderNumber=page.locator(".em-spacer-1 label").nth(1);
 let orderNum=await orderNumber.textContent();
+console.log(orderNum);
+let orderNumb=orderNum.split('|')[1];
+orderNumb=orderNumb.trim();
+console.log(orderNumb);
 
+// Navigate to orders page
 let orderSummaryPage=page.locator(".em-spacer-1 label").nth(0);
 await orderSummaryPage.click();
 
+// verify order is present in orders page
+const orders=page.locator("tbody tr");
+await orders.first().waitFor();
+let ordersCount=await orders.count();
+let found=false;
+for(let i=0;i<ordersCount;i++)
+  {
+    let orderRowtext=await orders.nth(i).locator("th").textContent();
+    console.log(orderRowtext);
+    if(await orderNumb===orderRowtext)
+    {
+      found=true;
+      await orders.nth(i).locator("button").first().click();
+      break;
+    }
+  } 
+  await expect(found).toBeTruthy();
+
+
+  // validate order id on order summary page
+  const orderIdOnSummary=page.locator(".col-text ").nth(0);
+  let orderIdTextOnSummary= await orderIdOnSummary.textContent();
+  await expect(orderIdTextOnSummary).toBe(orderNumb);
+
+  //validate product name
+  const productNameOnSummary=page.locator(".artwork-card-info .title");
+  let productNameOnSummaryText=await productNameOnSummary.textContent();
+  await expect(productNameOnSummaryText.trim()).toBe(productName);
+
+  // validate price
+  const priceOnSummary=page.locator(".artwork-card-info .info .price");
+  let priceOnSummaryText=await priceOnSummary.textContent();
+  await expect(priceOnSummaryText.trim()).toBe(prodprice);
+  
 
 
 
